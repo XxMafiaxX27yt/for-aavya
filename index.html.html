@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>For Aavya Jain ✨</title>
+  <style>
+    :root {
+      --bg-color: #fff5f7;
+      --card-bg: #ffffff;
+      --primary: #ff4d6d;
+      --primary-hover: #ff758f;
+      --text-dark: #2b2d42;
+      --accent: #ffb3c1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #121212;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+    }
+
+    /* Mobile Frame */
+    .mobile-frame {
+      width: 100%;
+      max-width: 430px;
+      height: 100vh;
+      height: 100dvh;
+      background: var(--bg-color);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    h1, h2 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: var(--text-dark);
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .hint {
+      font-size: 0.88rem;
+      color: #888;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    /* Tappable Keypad for Lock 1 */
+    .keypad-display {
+      width: 80%;
+      padding: 12px;
+      border: 2px solid var(--accent);
+      border-radius: 25px;
+      text-align: center;
+      font-size: 1.5rem;
+      letter-spacing: 6px;
+      background: #fff;
+      color: var(--primary);
+      margin-bottom: 15px;
+      min-height: 52px;
+    }
+
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 80%;
+      max-width: 280px;
+      margin-bottom: 10px;
+    }
+
+    .key-btn {
+      background: #ffffff;
+      color: var(--primary);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      justify-self: center;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 77, 109, 0.15);
+      transition: transform 0.1s, background 0.1s;
+    }
+
+    .key-btn:active {
+      transform: scale(0.9);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .key-btn.action-btn {
+      background: #fff0f3;
+      font-size: 1.1rem;
+    }
+
+    /* Inputs & Buttons */
+    input[type="password"], input[type="text"] {
+      width: 80%;
+      padding: 14px;
+      border: 2px solid var(--accent);
+      border-radius: 25px;
+      text-align: center;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      outline: none;
+      margin-bottom: 15px;
+      background: #fff;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+      transition: transform 0.2s, background 0.2s;
+      margin: 6px;
+      width: 90%;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+    }
+
+    /* Wrong passcode Shake & Cross Overlay */
+    .shake {
+      animation: shakeAnim 0.4s ease-in-out;
+    }
+
+    @keyframes shakeAnim {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-12px); }
+      40%, 80% { transform: translateX(12px); }
+    }
+
+    .cross-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 0, 0, 0.2);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .cross-symbol {
+      font-size: 120px;
+      color: #ff0033;
+      animation: popIn 0.3s ease-out;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      80% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Modal Overlay */
+    .modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 24px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 320px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .cat-img {
+      width: 180px;
+      max-height: 180px;
+      object-fit: contain;
+      border-radius: 15px;
+      margin: 10px auto;
+      display: block;
+    }
+
+    /* Water Fill Animation */
+    .water-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      background: rgba(0, 150, 255, 0.55);
+      z-index: 5;
+      transition: height 2.5s ease-in-out;
+      pointer-events: none;
+    }
+
+    /* Floating Emojis */
+    .floating-emoji {
+      position: absolute;
+      font-size: 2rem;
+      pointer-events: none;
+      z-index: 6;
+      animation: floatUp 3s linear forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.8); opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    }
+
+    /* VIP Pass Card */
+    .vip-card {
+      background: linear-gradient(135deg, #ff758f, #ff4d6d);
+      color: white;
+      padding: 30px 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4);
+      width: 90%;
+      border: 2px solid #fff;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .vip-badge {
+      background: #fff;
+      color: var(--primary);
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    /* 3D Mystery Card Flip */
+    .card-deck {
+      width: 100%;
+      height: 190px;
+      perspective: 1000px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .card-3d {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card-3d.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .card-front {
+      background: linear-gradient(135deg, #ffffff, #ffe6ea);
+      border: 2px dashed var(--primary);
+      color: var(--primary);
+    }
+
+    .card-back {
+      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      color: white;
+      transform: rotateY(180deg);
+    }
+
+    .card-front h3 {
+      font-size: 2.2rem;
+      letter-spacing: 4px;
+      margin-top: 5px;
+    }
+
+    /* Dark Petals Swirl Finale Screen */
+    #screen-flowers {
+      background: #050208;
+    }
+
+    .petals-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .final-message-card {
+      background: rgba(18, 10, 24, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 26px 20px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 117, 143, 0.4);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 77, 109, 0.2);
+      z-index: 3;
+      max-height: 85%;
+      overflow-y: auto;
+      color: #ffffff;
+    }
+
+    .final-message-card h2 {
+      color: #ff758f;
+      font-size: 1.6rem;
+      text-shadow: 0 2px 10px rgba(255, 77, 109, 0.5);
+    }
+
+    .final-message-card p {
+      color: #f1f1f1;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mobile-frame">
+
+    <!-- Red Cross Overlay for Incorrect Passcodes -->
+    <div class="cross-overlay" id="crossOverlay">
+      <div class="cross-symbol">❌</div>
+    </div>
+
+    <!-- Medicine Check Modal -->
+    <div class="modal" id="medicineModal">
+      <div class="modal-content">
+        <h3>Uh oh! 😿</h3>
+        <!-- Serious White Cat Image -->
+        <img id="grumpyCatImg" src="./grumpy_cat.png" class="cat-img" alt="Serious Cat">
+        <p>did u sleep well and take ur medicines?!</p>
+        <button class="btn" style="width: auto;" onclick="handleMedicineResponse(true)">YES</button>
+        <button class="btn btn-secondary" style="width: auto;" onclick="handleMedicineResponse(false)">NO</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 1: Passcode 1 (TAPPABLE KEYPAD) -->
+    <div class="screen active" id="screen-pass1">
+      <h2>🔐 Screen Lock 1</h2>
+      <p>Tap the secret pin to proceed:</p>
+      <div class="hint">Hint: "im lucky this day happened"</div>
+      
+      <!-- Keypad Display -->
+      <div class="keypad-display" id="keypadDisplay">••••••••</div>
+
+      <!-- Keypad Grid -->
+      <div class="keypad-grid">
+        <button class="key-btn" onclick="pressKey('1')">1</button>
+        <button class="key-btn" onclick="pressKey('2')">2</button>
+        <button class="key-btn" onclick="pressKey('3')">3</button>
+        <button class="key-btn" onclick="pressKey('4')">4</button>
+        <button class="key-btn" onclick="pressKey('5')">5</button>
+        <button class="key-btn" onclick="pressKey('6')">6</button>
+        <button class="key-btn" onclick="pressKey('7')">7</button>
+        <button class="key-btn" onclick="pressKey('8')">8</button>
+        <button class="key-btn" onclick="pressKey('9')">9</button>
+        <button class="key-btn action-btn" onclick="clearKeypad()">⌫</button>
+        <button class="key-btn" onclick="pressKey('0')">0</button>
+        <button class="key-btn action-btn" style="color: var(--primary);" onclick="checkPass1()">✓</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: Passcode 2 (TYPED INPUT) -->
+    <div class="screen" id="screen-pass2">
+      <h2>🔒 Screen Lock 2</h2>
+      <p>Type the second code, cutie!</p>
+      <div class="hint">Hint: "our bestest day"</div>
+      <input type="password" id="pass2Input" placeholder="DDMMYYYY" pattern="[0-9]*" inputmode="numeric">
+      <button class="btn" onclick="checkPass2()">Access Intro 💖</button>
+    </div>
+
+    <!-- SCREEN 3: Intro Question -->
+    <div class="screen" id="screen-intro">
+      <h2>hello queen!! 👑</h2>
+      <p style="margin-bottom: 5px;">before we proceed i have a question for u... do u still love me and like me? 🥺</p>
+      
+      <!-- Happy Cat Holding Flowers Image -->
+      <img id="introCat" src="./cat_flowers.png" class="cat-img" alt="Cat with Flowers">
+
+      <div style="margin-top: 5px; width: 100%;">
+        <button class="btn" onclick="handleLoveResponse(true)">YES! 💕</button>
+        <button class="btn btn-secondary" onclick="handleLoveResponse(false)">NO 😜</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: Crying Cat & Water Screen (If she presses NO) -->
+    <div class="water-fill" id="waterOverlay"></div>
+    <div class="screen" id="screen-crying">
+      <h2 style="color: #0077b6;">NOOO! 😭😭</h2>
+      <!-- Crying Banana Cat Image -->
+      <img src="./crying_cat.png" class="cat-img" alt="Crying Cat">
+      <p style="z-index: 7;">My heart is drowning in tears...</p>
+      <button class="btn" style="z-index: 7;" onclick="resetFromCrying()">Try Again 🥺</button>
+    </div>
+
+    <!-- SCREEN 5: VIP Pass -->
+    <div class="screen" id="screen-vip">
+      <div class="vip-card">
+        <span class="vip-badge">Official VIP Pass</span>
+        <h2>Appreciation Pass</h2>
+        <p style="color: white; margin-top: 10px; font-weight: bold; font-size: 1.3rem;">
+          hey cutie this pass is for u<br>
+          <span style="font-size: 1.6rem; color: #fff0f3; text-decoration: underline;">Aavya Jain</span>
+        </p>
+      </div>
+      <button class="btn" onclick="showScreen('screen-perks')">NEXT ➡️</button>
+    </div>
+
+    <!-- SCREEN 6: Mystery Cards / Perks -->
+    <div class="screen" id="screen-perks">
+      <h2>Pick a Mystery Card 🎁</h2>
+      <p style="font-size: 0.9rem; margin-bottom: 12px;">Choose a pass below to flip and reveal your perk!</p>
+
+      <div class="card-deck">
+        <div class="card-3d" id="perkCard">
+          <!-- Card Front: MYSTERY DISPLAY -->
+          <div class="card-face card-front">
+            <span style="font-size: 3rem;">❓</span>
+            <h3>???</h3>
+            <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">Tap a button below to unlock!</p>
+          </div>
+          <!-- Card Back: REVEALED PERK -->
+          <div class="card-face card-back">
+            <span id="cardIcon" style="font-size: 2.5rem;">💌</span>
+            <h3 id="cardTitle" style="margin-top: 8px;">???</h3>
+            <p id="cardDesc" style="color: #fff; font-size: 0.9rem; margin-top: 5px;"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MYSTERY BUTTONS -->
+      <div style="display: flex; flex-direction: column; width: 100%; align-items: center;">
+        <button class="btn" onclick="activatePass('kalesh')">Mystery Pass #1 ❓</button>
+        <button class="btn" onclick="activatePass('hug')">Mystery Pass #2 ❓</button>
+        <button class="btn" onclick="activatePass('pic')">Mystery Pass #3 ❓</button>
+      </div>
+
+      <button class="btn btn-secondary" style="margin-top: 10px;" onclick="startFlowerFinale()">Reveal Special Note 🌸</button>
+    </div>
+
+    <!-- SCREEN 7: Dark Petals Swirl Finale -->
+    <div class="screen" id="screen-flowers">
+      <canvas id="petalsCanvas" class="petals-canvas"></canvas>
+      
+      <div class="final-message-card">
+        <h2>To My Dearest Aavya 💕</h2>
+        <p style="margin-top: 15px;">
+          Aavya , despite the whole school making fun of me and bullying me , thank you for being with my side with my family im forever grateful to u madam ji 😅
+          <br><br>
+          <strong>Thank you for everything, Queen! 👑✨</strong>
+        </p>
+        <button class="btn" style="margin-top: 15px; width: 100%;" onclick="spawnEmojiBurst('💖')">Send Heart Burst 💞</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Keypad Logic for Lock 1
+    let keypadVal = "";
+
+    function pressKey(num) {
+      if (keypadVal.length < 8) {
+        keypadVal += num;
+        updateKeypadDisplay();
+      }
+    }
+
+    function clearKeypad() {
+      keypadVal = keypadVal.slice(0, -1);
+      updateKeypadDisplay();
+    }
+
+    function updateKeypadDisplay() {
+      const display = document.getElementById('keypadDisplay');
+      if (keypadVal.length === 0) {
+        display.innerText = '••••••••';
+        display.style.color = '#ffb3c1';
+      } else {
+        display.innerText = '•'.repeat(keypadVal.length);
+        display.style.color = '#ff4d6d';
+      }
+    }
+
+    // State Tracking
+    let failCount = 0;
+    let unlimitedMode = false;
+
+    // Navigation Helper
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    // Fail Handler for Locks
+    function handleFail(screenId) {
+      failCount++;
+      const overlay = document.getElementById('crossOverlay');
+      const screenEl = document.getElementById(screenId);
+
+      overlay.style.display = 'flex';
+      screenEl.classList.add('shake');
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        screenEl.classList.remove('shake');
+      }, 700);
+
+      if (failCount >= 3 && !unlimitedMode) {
+        setTimeout(() => {
+          document.getElementById('medicineModal').style.display = 'flex';
+        }, 800);
+      }
+    }
+
+    // Medicine Modal Response
+    function handleMedicineResponse(tookMedicines) {
+      document.getElementById('medicineModal').style.display = 'none';
+      unlimitedMode = true;
+
+      if (tookMedicines) {
+        alert("okie dokiee unlimited tries keep guessing 😏😒🙄");
+      } else {
+        alert("im coming for u anyways here is ur unlimited guess 🥹🙄😒");
+      }
+    }
+
+    // Check Lock 1 (Keypad)
+    function checkPass1() {
+      if (keypadVal === '29122010') {
+        showScreen('screen-pass2');
+      } else {
+        handleFail('screen-pass1');
+        keypadVal = "";
+        updateKeypadDisplay();
+      }
+    }
+
+    // Check Lock 2 (Typed Input)
+    function checkPass2() {
+      const val = document.getElementById('pass2Input').value.trim();
+      if (val === '22072025') {
+        showScreen('screen-intro');
+      } else {
+        handleFail('screen-pass2');
+      }
+    }
+
+    // Intro Response
+    function handleLoveResponse(answersYes) {
+      if (answersYes) {
+        showScreen('screen-vip');
+      } else {
+        showScreen('screen-crying');
+        document.getElementById('waterOverlay').style.height = '100%';
+        spawnFloatingEmojis('😭', 25);
+      }
+    }
+
+    function resetFromCrying() {
+      document.getElementById('waterOverlay').style.height = '0%';
+      showScreen('screen-intro');
+    }
+
+    // Floating Emoji Generator
+    function spawnFloatingEmojis(emojiSymbol, count = 20) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const emoji = document.createElement('div');
+          emoji.className = 'floating-emoji';
+          emoji.innerText = emojiSymbol;
+          emoji.style.left = Math.random() * 85 + 5 + '%';
+          emoji.style.animationDuration = (Math.random() * 1.5 + 2) + 's';
+          document.querySelector('.mobile-frame').appendChild(emoji);
+
+          setTimeout(() => emoji.remove(), 3000);
+        }, i * 100);
+      }
+    }
+
+    function spawnEmojiBurst(emojiSymbol) {
+      spawnFloatingEmojis(emojiSymbol, 20);
+    }
+
+    // Mystery Pass Card Reveal (Shuffle & 3D Flip)
+    function activatePass(type) {
+      const card = document.getElementById('perkCard');
+      const icon = document.getElementById('cardIcon');
+      const title = document.getElementById('cardTitle');
+      const desc = document.getElementById('cardDesc');
+
+      card.classList.remove('flipped');
+
+      setTimeout(() => {
+        if (type === 'kalesh') {
+          icon.innerText = '😅';
+          title.innerText = 'Unlimited Kalesh Pass';
+          desc.innerText = 'Redeemable anytime! Unlimited drama & friendly fights guaranteed.';
+        } else if (type === 'hug') {
+          icon.innerText = '🫂';
+          title.innerText = 'Unlimited Hug Pass';
+          desc.innerText = 'Valid for endless warm, cozy hugs whenever you ask! 🫂';
+          spawnFloatingEmojis('🫂', 25);
+        } else if (type === 'pic') {
+          icon.innerText = '📸';
+          title.innerText = 'Unlimited Pic Pass';
+          desc.innerText = 'Redeemable anytime! Endless cute selfies, photos & memories together 📸✨';
+          spawnFloatingEmojis('📸', 25);
+        }
+
+        card.classList.add('flipped');
+      }, 300);
+    }
+
+    // Canvas Petals Swirl Effect (Dark Swirling Rose Petals)
+    let canvas, ctx, petals = [], animationFrame;
+
+    function initPetalsCanvas() {
+      canvas = document.getElementById('petalsCanvas');
+      ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      petals = [];
+      const colors = ['#ff4d6d', '#ff758f', '#ff8fa3', '#c9184a', '#ffb3c1'];
+
+      for (let i = 0; i < 70; i++) {
+        petals.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 8 + 4,
+          speedY: Math.random() * 1.5 + 0.8,
+          swirlAngle: Math.random() * Math.PI * 2,
+          swirlSpeed: Math.random() * 0.03 + 0.01,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: Math.random() * 2 - 1
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        petals.forEach(p => {
+          p.y -= p.speedY;
+          p.swirlAngle += p.swirlSpeed;
+          p.x += Math.sin(p.swirlAngle) * 1.8;
+          p.rotation += p.rotationSpeed;
+
+          if (p.y < -20) {
+            p.y = canvas.height + 20;
+            p.x = Math.random() * canvas.width;
+          }
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = p.color;
+
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(-p.size, -p.size, -p.size, p.size, 0, p.size * 1.5);
+          ctx.bezierCurveTo(p.size, p.size, p.size, -p.size, 0, 0);
+          ctx.fill();
+          ctx.restore();
+        });
+
+        animationFrame = requestAnimationFrame(animate);
+      }
+
+      cancelAnimationFrame(animationFrame);
+      animate();
+    }
+
+    function startFlowerFinale() {
+      showScreen('screen-flowers');
+      setTimeout(initPetalsCanvas, 100);
+      spawnFloatingEmojis('✨', 10);
+    }
+  </script>
+</body>
+</html>
